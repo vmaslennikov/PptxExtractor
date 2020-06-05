@@ -1,0 +1,27 @@
+<div>
+  <p>Загрузить файл</p>
+  <input type="file" (change)="fileChange($event)" placeholder="Загрузить файл *.pptx" accept=".pptx"/>
+  <p>Прогресс: {{progress}}</p>
+  <p>Результат: {{message}}</p>
+  <div>
+    <table *ngIf="PresentationData">
+      <thead>
+        <tr>
+          <th>Слайд</th>
+          <th>Видео</th>
+        </tr>
+      </thead>
+      <tbody >
+        <tr *ngFor="let item of PresentationData.slides">
+          <td>{{item.number}}</td>
+          <td>
+            <div *ngFor="let v of item.files">
+              <a href='{{getDownloadLink(PresentationData.fileName,item.number,v.fileName)}}'>{{v.fileName}} ({{v.contentType}})</a>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+  </div>
+</div>
