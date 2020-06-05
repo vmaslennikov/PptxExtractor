@@ -1,11 +1,8 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using DocumentFormat.OpenXml.Packaging;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.Logging;
@@ -17,15 +14,16 @@ namespace PptxExtractor.Controllers {
     [ApiController]
     [Route ("api/Files")]
     public class FilesController : Controller {
-        private readonly IHttpContextAccessor _httpContextAccessor;
+
+        private readonly ILogger<FilesController> _logger;
         private readonly IPptxReaderService _pptxReaderService;
         private readonly IFileSystemReaderService _fileSystemReaderService;
         public FilesController (
-            IHttpContextAccessor httpContextAccessor,
             IPptxReaderService pptxReaderService,
-            IFileSystemReaderService fileSystemReaderService
+            IFileSystemReaderService fileSystemReaderService,
+            ILogger<FilesController> logger
         ) {
-            _httpContextAccessor = httpContextAccessor;
+            _logger = logger;
             _pptxReaderService = pptxReaderService;
             _fileSystemReaderService = fileSystemReaderService;
         }
@@ -55,8 +53,8 @@ namespace PptxExtractor.Controllers {
 
                 fileContents = await _pptxReaderService.GetFile(fn,vn);
 
-            } catch (Exception e) {
-
+            } catch (Exception error) {
+                _logger.LogError(error, error.Message);
             }
             return File (
                 fileContents: fileContents,
@@ -81,8 +79,9 @@ namespace PptxExtractor.Controllers {
                 }
 
                 return Ok (new { fullPath });
-            } catch (Exception ex) {
-                return StatusCode (500, $"Internal server error: {ex.Message}");
+            } catch (Exception error) {
+                _logger.LogError(error, error.Message);
+                return StatusCode (500, $"Internal server error: {error.Message}");
             }
         }
 
@@ -100,8 +99,9 @@ namespace PptxExtractor.Controllers {
                 PresentationData result = _pptxReaderService.Extract (fn, fullPath);
 
                 return Ok (result);
-            } catch (Exception ex) {
-                return StatusCode (500, $"Internal server error: {ex.Message}");
+            } catch (Exception error) {
+                _logger.LogError(error, error.Message);
+                return StatusCode (500, $"Internal server error: {error.Message}");
             }
         }
 
