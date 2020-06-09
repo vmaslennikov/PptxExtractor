@@ -75,7 +75,9 @@ namespace PptxExtractor
 
                 if (env.IsDevelopment())
                 {
-                    spa.UseAngularCliServer(npmScript: "start");
+                    //spa.UseAngularCliServer(npmScript: "start");
+                    // for Docker
+                    spa.UseProxyToSpaDevelopmentServer("http://PptxExtractor.angular.app:4200");
                 }
             });
         }

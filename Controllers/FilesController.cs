@@ -74,7 +74,7 @@ namespace PptxExtractor.Controllers {
 
                 var fullPath = _fileSystemReaderService.GetStoragePathForSave (fileName);
 
-                using (var stream = new FileStream (fullPath, FileMode.Create)) {
+                using (var stream = new FileStream (fullPath, FileMode.OpenOrCreate)) {
                     await file.CopyToAsync (stream);
                 }
 

@@ -8,6 +8,7 @@ import { HttpEventType, HttpResponse, HttpClient } from '@angular/common/http';
 export class HomeComponent {
   progress: number;
   message: string;
+  error: string;
   apiEndPoint = '/api/files';
   filename: string;
   JsonContent: string;
@@ -47,11 +48,16 @@ export class HomeComponent {
   }
 
   extractFromPptx(fileName: string) {
+    this.PresentationData = null;
+    this.error = null;
     this.http
     .get(`${this.apiEndPoint}/extract?fn=${decodeURIComponent(fileName)}`)
     .subscribe(presentationData => {
         this.PresentationData = presentationData;
         this.JsonContent = JSON.stringify(presentationData, null, ' ');
+    },
+    error => {
+      this.error = error.error;
     });
   }
 
