@@ -6,3 +6,10 @@
 3. скачать любой из этих видеофайлов.
 
 ![Пример работы](/example.gif)
+
+Возможен запуск в Docker на https://labs.play-with-docker.com/
+
+1. git clone https://github.com/vmaslennikov/PptxExtractor.git
+2. cd ~/PptxExtractor
+3. docker build . --tag pptxextractor
+4. docker run -d -p 80:80 pptxextractor
